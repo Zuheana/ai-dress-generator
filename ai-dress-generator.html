@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Dress Generator</title>
+</head>
+<body style="font-family:Arial,sans-serif; text-align:center;">
+
+<h2>🎨 AI Dress Generator</h2>
+<p>Describe your dream dress and let AI bring it to life!</p>
+
+<input type="text" id="prompt" placeholder="e.g., red silk evening gown" 
+       style="width:80%;padding:10px;border-radius:8px;border:1px solid #ccc;">
+<br><br>
+<button id="generateBtn" 
+        style="padding:10px 20px;border:none;background:#000000;color:white;border-radius:8px;cursor:pointer;">
+  Generate Dress
+</button>
+
+<div id="output" style="margin-top:20px;"></div>
+
+<script>
+document.getElementById("generateBtn").addEventListener("click", async () => {
+  const prompt = document.getElementById("prompt").value.trim();
+  if (!prompt) {
+    alert("Please describe your dress idea first!");
+    return;
+  }
+
+  document.getElementById("output").innerHTML = "⏳ Generating your dress... Please wait 10–15 seconds.";
+
+  try {
+    const response = await fetch("https://eoipkhars8uz1rj.m.pipedream.net", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    const data = await response.json();
+    const imageUrl = data.imageUrl;
+
+    if (imageUrl) {
+      document.getElementById("output").innerHTML = `<img src="${imageUrl}" style="max-width:90%;border-radius:10px;margin-top:10px;">`;
+    } else {
+      document.getElementById("output").innerHTML = "❌ Error: Could not generate the dress image.";
+    }
+  } catch (error) {
+    document.getElementById("output").innerHTML = "❌ Error: Unable to connect to the AI service.";
+    console.error(error);
+  }
+});
+</script>
+
+</body>
+</html>
